@@ -3,6 +3,7 @@ import { Spinner } from 'react-bootstrap';
 import { redirect } from '../../api/UrlAPI';
 import "./Redirect.css";
 import  errorImg  from '../../error.png'
+import { Link } from 'react-router-dom';
 
 function Redirect() {
 
@@ -43,6 +44,7 @@ function Redirect() {
             <img src={errorImg} alt="error" width="150px"/>
             <br/>
             <span>URL Not Found</span>
+            <Link to="/">Back to Home</Link>
         </div>
       </div>
   )

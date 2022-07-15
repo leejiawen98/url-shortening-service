@@ -84,18 +84,16 @@ function Home() {
           {value.url}
         </a>
 
-        <span>
         <a href={window.location.origin + value.short_url}>
           {window.location.origin}{value.short_url}
         </a>
+
         <Button 
-        className="copy-button"
         size="sm" 
         color="primary" 
         onClick={() => handleCopy(window.location.origin + value.short_url)}>
           Copy
         </Button>
-        </span>
        
       </li>
     )
@@ -163,9 +161,10 @@ function Home() {
         </CardHeader>
         <CardBody>
           <ul>
-            <li style={{'font-weight':'bold'}}>
+            <li style={{'fontWeight':'bold'}}>
               <span>Original URL</span>
               <span>Converted URL</span>
+              <span></span>
             </li>
             {convertedUrlList}
           </ul>
