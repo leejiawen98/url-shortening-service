@@ -33,3 +33,29 @@
 .card-content-input {
     margin-right:20px
 }
+
+.show-button {
+    margin-left:650px;
+    margin-top:20px
+}
+
+.card-list {
+    margin-top:10px
+}
+
+ul {
+    list-style: none;
+    padding:10px;
+}
+
+li {
+    padding:10px;
+    display:flex;
+    flex-direction:row;
+    justify-content: space-between;
+    font-size:18px
+}
+
+.copy-button {
+    margin-left: 15px
+}

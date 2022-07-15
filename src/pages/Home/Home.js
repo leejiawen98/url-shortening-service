@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Toast } from 'react-bootstrap';
 import { Button, Card, CardBody, CardHeader, Input } from 'reactstrap'
 import { getAllShortenedUrls, shortenURL } from '../../api/UrlAPI';
@@ -8,8 +8,13 @@ function Home() {
   const [urlValue, setUrlValue] = useState('');
   const [newUrlValue, setNewUrlValue] = useState('');
   const [success, setSuccess] = useState(false);
-  const [urlList, setUrlList] = useState('');
   const [copied, setCopied] = useState(false);
+  const [urlList, setUrlList] = useState([]);
+  const [showUrlList, setShowUrlList] = useState(false);
+
+  useEffect(() => {
+    retrieveAllShortenedURLS();
+  }, [])
 
   const handleUrlInput = (e) => {
     setSuccess(false);
@@ -18,14 +23,26 @@ function Home() {
 
   const handleSubmit = () => {
     let noError = document.getElementById('url-input').reportValidity();
-    if (noError) {
+    if (noError && urlValue) {
       shorten(urlValue);
+    }
+
+    if (!urlValue) {
+      alert('Please input a value')
     }
   }
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(newUrlValue)
+  function handleCopy(url) {
+    navigator.clipboard.writeText(url)
     setCopied(true);
+  }
+
+  const handleShow = () => {
+    if (showUrlList) {
+      setShowUrlList(false);
+    } else {
+      setShowUrlList(true);
+    }
   }
 
   async function shorten(url) {
@@ -34,6 +51,7 @@ function Home() {
       if (response) {
         setNewUrlValue(window.location.origin + "" + response);
         setSuccess(true);
+        retrieveAllShortenedURLS();
       };
     } catch (error) {
       let msg = "";
@@ -59,6 +77,30 @@ function Home() {
     }
   }
 
+  const convertedUrlList = urlList.map((value, key) => {
+    return (
+      <li key={key}>
+        <a href={value.url}>
+          {value.url}
+        </a>
+
+        <span>
+        <a href={window.location.origin + value.short_url}>
+          {window.location.origin}{value.short_url}
+        </a>
+        <Button 
+        className="copy-button"
+        size="sm" 
+        color="primary" 
+        onClick={() => handleCopy(window.location.origin + value.short_url)}>
+          Copy
+        </Button>
+        </span>
+       
+      </li>
+    )
+  })
+
   return (
     <div className="content">
       <Toast 
@@ -82,6 +124,7 @@ function Home() {
           Copied to clipboard
         </Toast.Header>
       </Toast>
+
       <Card className="card">
         <CardHeader className="card-header">
           URL Shortening Service
@@ -92,7 +135,7 @@ function Home() {
               id="url-input"
               type="url"
               className="card-content-input" 
-              placeholder='Enter URL'
+              placeholder='Enter URL: https://www.example.com'
               onChange={handleUrlInput}
               value={urlValue}
               />
@@ -108,8 +151,24 @@ function Home() {
               value={newUrlValue}
               disabled={true}
               />
-              <Button color="primary" onClick={handleCopy}>Copy</Button>
+              <Button color="primary" onClick={() => handleCopy(newUrlValue)}>Copy</Button>
             </div>
+        </CardBody>
+      </Card>
+
+      <Button className="show-button" color="warning" onClick={handleShow}>Show all converted urls</Button>
+      <Card hidden={!showUrlList} className="card-list">
+        <CardHeader>
+          List of all converted URLs
+        </CardHeader>
+        <CardBody>
+          <ul>
+            <li style={{'font-weight':'bold'}}>
+              <span>Original URL</span>
+              <span>Converted URL</span>
+            </li>
+            {convertedUrlList}
+          </ul>
         </CardBody>
       </Card>
     </div>
