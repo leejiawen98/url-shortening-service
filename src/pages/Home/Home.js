@@ -154,7 +154,7 @@ function Home() {
         </CardBody>
       </Card>
 
-      <Button className="show-button" color="warning" onClick={handleShow}>Show all converted urls</Button>
+      <Button className="show-button" color="warning" onClick={handleShow}>{showUrlList ? "Hide" : "Show"} all converted urls</Button>
       <Card hidden={!showUrlList} className="card-list">
         <CardHeader>
           List of all converted URLs
