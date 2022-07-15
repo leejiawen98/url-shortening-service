@@ -32,3 +32,15 @@ npm start
 ## Database
 The application uses mySQL database and the database has been deployed using Heroku.
 To set up the database in mySQL Work bench, the credentials can be found in the backend project, in `index.js`
+
+## Unit Tests
+There are 2 unit tests in the backend project in `test/test.js`.
+To run the unit tests:
+### Install Mocha
+```
+npm install -g mocha
+```
+### Run Mocha in backend directory
+```
+mocha
+```
