@@ -5,8 +5,7 @@
 }
 
 .toast {
-    position: fixed;
-    transition: opacity 1s;
+    font-size: 20px
 }
 
 .card {

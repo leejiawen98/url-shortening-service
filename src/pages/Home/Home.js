@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
-import { useLocation } from 'react-router-dom';
-import { Button, Card, CardBody, CardHeader, Input, Toast, ToastHeader } from 'reactstrap'
+import { Toast } from 'react-bootstrap';
+import { Button, Card, CardBody, CardHeader, Input } from 'reactstrap'
 import { getAllShortenedUrls, shortenURL } from '../../api/UrlAPI';
 import "./Home.css"
 
 function Home() {
   const [urlValue, setUrlValue] = useState('');
+  const [newUrlValue, setNewUrlValue] = useState('');
   const [success, setSuccess] = useState(false);
   const [urlList, setUrlList] = useState('');
-
-  const location = useLocation();
+  const [copied, setCopied] = useState(false);
 
   const handleUrlInput = (e) => {
     setSuccess(false);
@@ -23,11 +23,16 @@ function Home() {
     }
   }
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(newUrlValue)
+    setCopied(true);
+  }
+
   async function shorten(url) {
     try {
       const response = await shortenURL(url);
       if (response) {
-        console.log(location.pathname + response);
+        setNewUrlValue(window.location.origin + "" + response);
         setSuccess(true);
       };
     } catch (error) {
@@ -57,9 +62,25 @@ function Home() {
   return (
     <div className="content">
       <Toast 
-      isOpen={success} 
-      className="toast">
-        <ToastHeader>Successfully shortened URL</ToastHeader>
+      show={success}
+      position="top-center"
+      className="toast"
+      >
+        <Toast.Header closeButton={false}>
+          Successfully shortened URL
+        </Toast.Header>
+      </Toast>
+
+      <Toast 
+      onClose={() => setCopied(false)}
+      show={copied}
+      position="top-center"
+      className="toast"
+      delay={3000}
+      autohide>
+        <Toast.Header>
+          Copied to clipboard
+        </Toast.Header>
       </Toast>
       <Card className="card">
         <CardHeader className="card-header">
@@ -76,7 +97,19 @@ function Home() {
               value={urlValue}
               />
               <Button color="success" onClick={handleSubmit}>Submit</Button>
-              </div>
+            </div>
+
+            <div className="card-content" hidden={!success}>
+              <Input 
+              id="url-input"
+              type="url"
+              className="card-content-input" 
+              placeholder='Enter URL'
+              value={newUrlValue}
+              disabled={true}
+              />
+              <Button color="primary" onClick={handleCopy}>Copy</Button>
+            </div>
         </CardBody>
       </Card>
     </div>
